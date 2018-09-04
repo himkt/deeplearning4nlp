@@ -1,0 +1,5 @@
+in_dim     : 784
+hid_dim    : 200
+out_dim    : 10
+batch_size : 32
+n_epoch    : 100
