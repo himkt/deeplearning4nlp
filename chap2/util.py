@@ -1,6 +1,8 @@
 from vocab import UNK
 from vocab import PAD
 
+import numpy
+
 
 def load_data(data_fpath):
     with open(data_fpath) as f:
@@ -30,3 +32,15 @@ def pad_seq(seq, max_length):
     """
     seq += [PAD for i in range(max_length - len(seq))]
     return seq
+
+
+def init_negative_table(frequency, negative_alpha, table_length):
+    z = numpy.sum(numpy.power(frequency, negative_alpha))
+    negative_table = numpy.zeros(table_length, dtype=numpy.int32)
+    begin_index = 0
+    for word_id, freq in enumerate(frequency):
+        c = numpy.power(freq, negative_alpha)
+        end_index = begin_index + int(c * table_length / z) + 1
+        negative_table[begin_index:end_index] = word_id
+        begin_index = end_index
+    return negative_table
