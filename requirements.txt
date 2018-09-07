@@ -1,6 +1,8 @@
 numpy
-torch==0.4.1
+scipy
+torch==0.4.1.post2
 torchvision
 scikit-learn
 pyyaml
 tqdm
+ipython
