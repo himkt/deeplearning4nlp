@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     params = yaml.load(open(args.config))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    text = load_data("./data/text8")
+    text = load_data("../data/text8")
     vocab = Vocab()
     vocab.build_vocab([text], min_count=MIN_COUNT)
     vocab_size = len(vocab.word2id)
