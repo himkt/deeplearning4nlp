@@ -51,13 +51,13 @@ if __name__ == '__main__':
     ])
 
     train_data = torchvision.datasets.FashionMNIST(
-        './data/fashion-mnist',
+        '../data/fashion-mnist',
         transform=transform,
         train=True,
         download=True)
 
     test_data = torchvision.datasets.FashionMNIST(
-        './data/fashion-mnist',
+        '../data/fashion-mnist',
         transform=transform,
         train=False,
         download=True)
