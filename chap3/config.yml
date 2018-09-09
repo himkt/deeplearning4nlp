@@ -1,0 +1,12 @@
+network:
+  hidden_size: 256
+
+training:
+  epoch: 30
+  batch_size: 64
+  learning_rate: 0.001
+  teacher_forcing_rate: 0.2
+
+output:
+  model_fpath: './model'
+
