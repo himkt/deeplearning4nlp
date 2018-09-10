@@ -184,8 +184,8 @@ if __name__ == '__main__':
         msg = f'Epoch #{epoch:04d} train_loss: {train_loss:.2f}'
         msg += f' valid_loss: {valid_loss:.2f} valid_blue: {valid_bleu:.2f}'
 
-        ckpt_path = 'model_{epoch:03d}.pth'  # 学習済みのモデルを保存するパス
-        ckpt_path = output_dir / 'model.pth'
+        ckpt_fname = f'model_{epoch:03d}.pth'  # 学習済みのモデルを保存するパス
+        ckpt_path = output_dir / ckpt_fname
         ckpt_path = ckpt_path.as_posix()
 
         # validationデータでBLEUが改善した場合にはモデルを保存

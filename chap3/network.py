@@ -95,7 +95,7 @@ class EncoderDecoder(nn.Module):
 
         # decoderの入力と隠れ層の初期状態を定義
         decoder_input = torch.tensor(
-            [1] * _batch_size, dtype=torch.long, device=self.device)
+            [word2id['<BOS>']] * _batch_size, dtype=torch.long, device=self.device)
         # NOTE 1 is BOS
         decoder_input = decoder_input.unsqueeze(0)  # (1, batch_size)
         decoder_hidden = encoder_hidden  # Encoderの最終隠れ状態を取得
@@ -148,7 +148,7 @@ class BeamEncoderDecoder(EncoderDecoder):
 
         # decoderの入力と隠れ層の初期状態を定義
         decoder_input = torch.tensor(
-            [1] * _batch_size, dtype=torch.long, device=self.device)
+            [word2id['<BOS>']] * _batch_size, dtype=torch.long, device=self.device)
         # NOTE 1 is BOS
         decoder_input = decoder_input.unsqueeze(0)  # (1, batch_size)
         decoder_hidden = encoder_hidden

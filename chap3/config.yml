@@ -1,9 +1,9 @@
 network:
-  hidden_size: 256
+  hidden_size: 512
 
 training:
-  epoch: 30
-  batch_size: 64
+  epoch: 50
+  batch_size: 32
   learning_rate: 0.001
   teacher_forcing_rate: 0.2
 

@@ -26,6 +26,7 @@ from network import EncoderDecoder
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('model_dir')
+    parser.add_argument('--epoch', type=int)
     args = parser.parse_args()
     model_dir = pathlib.Path(args.model_dir)
 
@@ -38,7 +39,7 @@ if __name__ == '__main__':
     vocab_X = data_npz['vocab_X'].item()
     vocab_Y = data_npz['vocab_Y'].item()
 
-    model_path = model_dir / 'model.pth'
+    model_path = model_dir / f'model_{args.epoch:03d}.pth'
     model = EncoderDecoder(**args_params)
     model.load_state_dict(torch.load(model_path.as_posix()))
     print(f'loaded model from {model_path}', file=sys.stderr)
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     pred_Y = []
     for batch in test_dataloader:
         batch_X, _, lengths_X = batch
-        pred = model(batch_X, lengths_X, max_length=test_max_length)
+        pred = model(batch_X, lengths_X, max_length=lengths_X[0])
         pred = pred.max(dim=-1)[1].view(-1).data.cpu().numpy().tolist()
         if word2id['<EOS>'] in pred:
             pred = pred[:pred.index(word2id['<EOS>'])]
