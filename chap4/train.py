@@ -1,5 +1,6 @@
 import time
 from sklearn.model_selection import train_test_split
+from gensim.models import KeyedVectors
 
 from nltk import bleu_score
 
@@ -16,6 +17,7 @@ import pathlib
 import common
 import argparse
 import yaml
+import sys
 import numpy
 
 
@@ -66,9 +68,6 @@ if __name__ == '__main__':
 
     train_X = load_data('../data/chap4/train.en')
     train_Y = load_data('../data/chap4/train.ja')
-    # 演習用にデータサイズを縮小
-    train_X = train_X[:len(train_X)//2]
-    train_Y = train_Y[:len(train_Y)//2]
 
     # 訓練データと検証データに分割
     train_X, valid_X, train_Y, valid_Y = train_test_split(train_X, train_Y,
@@ -82,6 +81,27 @@ if __name__ == '__main__':
 
     vocab_size_X = len(vocab_X.id2word)
     vocab_size_Y = len(vocab_Y.id2word)
+
+    word_dim = params['d_word_vec']
+    scale = numpy.sqrt(3.0 / word_dim)
+
+    # src: 英語, tgt: 日本語
+    src_syn0 = numpy.random.uniform(-scale, scale, [vocab_size_X, word_dim])
+    tgt_syn0 = numpy.random.uniform(-scale, scale, [vocab_size_Y, word_dim])
+
+    # TODO load pre-trained embeddings
+    if 'src_word_vec' in params:
+        match_word_num = 0
+        emb_model = KeyedVectors.load('../data/common/en/glove_200d')
+        for word, idx in vocab_X.word2id.items():
+            # do not have to lower (all words are lowercases)
+            if word in emb_model:
+                src_syn0[idx, :] = emb_model.word_vec(word)
+                match_word_num += 1
+
+        msg = 'use pre-trained word embeddings'
+        msg += f' ({match_word_num} words in vocab)'
+        print(msg, file=sys.stderr)
 
     train_X = [sentence_to_ids(vocab_X, sentence) for sentence in train_X]
     train_Y = [sentence_to_ids(vocab_Y, sentence) for sentence in train_Y]
