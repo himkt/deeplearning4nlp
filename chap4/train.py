@@ -19,6 +19,7 @@ import argparse
 import yaml
 import sys
 import numpy
+import json
 
 
 def compute_loss(batch_X, batch_Y, model, criterion,
@@ -136,6 +137,9 @@ if __name__ == '__main__':
     # 訓練
     best_valid_bleu = 0.
 
+    log_path = output_dir / 'logs.jsonl'
+    log_file = open(log_path.as_posix(), 'w')
+
     for epoch in range(1, params['num_epochs']+1):
         start = time.time()
         train_loss = 0.
@@ -179,5 +183,12 @@ if __name__ == '__main__':
         elapsed_time = (time.time()-start) / 60
         msg = f'Epoch {epoch:3d} ({elapsed_time:.2f}) train_loss: {train_loss:.2f} train_bleu: {train_bleu:.2f}'  # NOQA
         msg += f' valid_loss: {valid_loss:.2f} valid_bleu: {valid_bleu:.2f}'
-        print(msg)
-        print('-'*80)
+
+        print(msg, file=sys.stderr)
+        print('-'*80, file=sys.stderr)
+
+        log_items = {'epoch': epoch, 'train_loss': train_loss, 'train_bleu': train_bleu}  # NOQA
+        log_items.update({'valid_loss': valid_loss, 'valid_bleu': valid_bleu})
+        print(json.dumps(log_items), file=log_file)
+
+    log_file.close()
